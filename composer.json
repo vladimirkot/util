@@ -1,6 +1,7 @@
 {
     "name": "granule/util",
     "description": "Granule Utils",
+    "keywords": ["enum", "tree", "array", "data"],
     "type": "library",
     "require": {
         "php": "^7.1"
