@@ -23,9 +23,30 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Map;
 
-interface MapBuilder {
-    function add($key, $value): MapBuilder;
-    function build(): Map;
+use Granule\Util\StrictTypedValue;
+
+class StrictTypedMapBuilder extends MapBuilder implements StrictTypedValue {
+    private $valueType;
+
+    public function __construct(string $mapClass, string $valueType) {
+        parent::__construct($mapClass);
+        $this->valueType = $valueType;
+    }
+
+    public function add($key, $value): MapBuilder {
+        $type = is_object($value) ? get_class($value) : gettype($value);
+        if (!($this->valueType == $type)) {
+            throw new \TypeError(
+                sprintf('Expected type %s provided: ', $this->valueType, $type)
+            );
+        }
+
+        return parent::add($key, $value);
+    }
+
+    public function getValueType(): string {
+        return $this->valueType;
+    }
 }

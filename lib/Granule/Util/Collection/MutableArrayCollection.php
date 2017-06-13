@@ -23,7 +23,9 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Collection;
+
+use Granule\Util\{Collection, MutableCollection};
 
 class MutableArrayCollection extends ArrayCollection implements MutableCollection {
 
@@ -104,7 +106,17 @@ class MutableArrayCollection extends ArrayCollection implements MutableCollectio
         return $changed;
     }
 
-    public function offsetUnset($offset) {
+    /** {@inheritdoc} */
+    public function offsetSet($offset, $value): void {
+        if ($offset === null) {
+            $this->add($value);
+        } else {
+            throw new \BadMethodCallException('Unable to set collection by index');
+        }
+    }
+
+    /** {@inheritdoc} */
+    public function offsetUnset($offset): void {
         if (!is_integer($offset)) {
             throw new \TypeError(
                 sprintf('Expected integer type, provided: %s', gettype($offset))

@@ -26,11 +26,12 @@
 namespace Granule\Tests\Util;
 
 use Granule\Util\Enum;
-use Granule\Tests\Util\TO\{Month, Planet};
+use Granule\Tests\Util\_fixtures\{Month, Planet};
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group core
+ * @group unit
+ * @group enum
  * @coversDefaultClass \Granule\Util\Enum
  */
 class EnumTest extends TestCase {

@@ -23,9 +23,9 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util\TO;
+namespace Granule\Tests\Util\Collection\_fixtures;
 
-use Granule\Util\MutableArrayCollection;
+use Granule\Util\Collection\MutableArrayCollection;
 use Granule\Util\StrictTypedValue;
 
 class MutableDateCollection extends MutableArrayCollection implements StrictTypedValue {

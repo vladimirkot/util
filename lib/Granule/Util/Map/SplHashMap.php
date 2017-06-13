@@ -23,14 +23,10 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Map;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+class SplHashMap extends HashMap {
+    protected function hashKey($key): string {
+        return spl_object_hash($key);
+    }
 }

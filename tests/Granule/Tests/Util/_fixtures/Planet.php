@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util\TO;
+namespace Granule\Tests\Util\_fixtures;
 
 use Granule\Util\Enum;
 

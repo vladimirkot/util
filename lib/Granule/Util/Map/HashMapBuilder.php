@@ -23,30 +23,62 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Map;
 
-class CollectionBuilder {
+use Granule\Util\TypeHelper;
+
+class HashMapBuilder {
     /** @var array */
-    protected $elements = [];
+    protected $keys = [];
+    /** @var array */
+    protected $values = [];
     /** @var string */
-    protected $class;
+    protected $mapClass;
+    /** @var ?string */
+    protected $mappingType;
+    /** @var ?string */
+    protected $keyType;
+    /** @var callable */
+    protected $hashFunc;
 
-    public function __construct(string $collectionClass) {
-        $this->class = $collectionClass;
+    public function __construct(
+        callable $hashFunc, string $mapClass,
+        ?string $mappingType, ?string $keyType
+    ) {
+        $this->hashFunc = $hashFunc;
+        $this->mapClass = $mapClass;
+        $this->mappingType = $mappingType;
+        $this->keyType = $keyType;
     }
 
-    public function add($element): CollectionBuilder {
-        $this->elements[] = $element;
+    public function add($key, $value): HashMapBuilder {
+        if ($this->keyType) {
+            TypeHelper::validate($key, $this->keyType);
+        }
+
+        if ($this->mappingType) {
+            TypeHelper::validate($value, $this->mappingType);
+        }
+
+        $hashFunc = $this->hashFunc;
+        $hash = $hashFunc($key);
+
+        $this->keys[$hash] = $key;
+        $this->values[$hash] = $value;
 
         return $this;
     }
 
-    public function getElements(): array {
-        return $this->elements;
+    public function getKeys(): array {
+        return $this->keys;
     }
 
-    public function build(): Collection {
-        $class = $this->class;
+    public function getValues(): array {
+        return $this->values;
+    }
+
+    public function build(): HashMap {
+        $class = $this->mapClass;
 
         return new $class($this);
     }

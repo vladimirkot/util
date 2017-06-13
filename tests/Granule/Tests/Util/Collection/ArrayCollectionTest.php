@@ -23,16 +23,16 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util;
+namespace Granule\Tests\Util\Collection;
 
-use Granule\Tests\Util\TO\DateCollection;
-use Granule\Util\ArrayCollection;
+use Granule\Tests\Util\Collection\_fixtures\DateCollection;
 use Granule\Util\Collection;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @group unit
- * @coversDefaultClass Granule\Util\ArrayCollection
+ * @group collection
+ * @coversDefaultClass Granule\Util\Collection\ArrayCollection
  */
 class ArrayCollectionTest extends TestCase {
     public function provider(): array {
@@ -58,7 +58,7 @@ class ArrayCollectionTest extends TestCase {
      */
     public function it_should_contain_specific_element(array $fixture, string $class): void {
         /** @var Collection $collection */
-        $collection = ArrayCollection::fromArray($fixture);
+        $collection = Collection\ArrayCollection::fromArray($fixture);
 
         $this->assertTrue($collection->contains(end($fixture)));
         $this->assertFalse($collection->contains(new \DateTimeImmutable('now')));
@@ -91,7 +91,7 @@ class ArrayCollectionTest extends TestCase {
      */
     public function it_should_contain_specific_collection_of_elements(array $fixture, string $class): void {
         /** @var Collection $collection */
-        $collection = ArrayCollection::fromArray($fixture);
+        $collection = Collection\ArrayCollection::fromArray($fixture);
         /** @var Collection $other */
         $other = $class::fromArray($fixture);
 
@@ -116,7 +116,7 @@ class ArrayCollectionTest extends TestCase {
      */
     public function it_should_be_able_to_check_equals(array $fixture, string $class): void {
         /** @var Collection $other */
-        $collection = ArrayCollection::fromArray($fixture);
+        $collection = Collection\ArrayCollection::fromArray($fixture);
         /** @var Collection $other */
         $other = $class::fromArray($fixture);
 
@@ -143,9 +143,9 @@ class ArrayCollectionTest extends TestCase {
      */
     public function it_should_be_able_to_check_emptiness(array $fixture, string $class): void {
         /** @var Collection $collection */
-        $collection = ArrayCollection::fromArray($fixture);
+        $collection = Collection\ArrayCollection::fromArray($fixture);
         /** @var Collection $collection */
-        $emptyCollection = ArrayCollection::fromArray([]);
+        $emptyCollection = Collection\ArrayCollection::fromArray([]);
 
         $this->assertFalse($collection->isEmpty());
         $this->assertTrue($emptyCollection->isEmpty());
@@ -161,7 +161,7 @@ class ArrayCollectionTest extends TestCase {
      */
     public function it_should_be_countable(array $fixture, string $class): void {
         /** @var Collection $collection */
-        $collection = ArrayCollection::fromArray($fixture);
+        $collection = Collection\ArrayCollection::fromArray($fixture);
 
         $this->assertEquals(3, count($collection));
         $this->assertEquals(3, $collection->count());
@@ -280,6 +280,6 @@ class ArrayCollectionTest extends TestCase {
         /** @var Collection $collection */
         $collection = $class::fromArray($fixture);
 
-        $this->assertEquals('9e8f7de68bf70884946c3d8265b8c0ef', $collection->hash());
+        $this->assertEquals('32da861b22c9671caaf91597324f5c93', $collection->hash());
     }
 }

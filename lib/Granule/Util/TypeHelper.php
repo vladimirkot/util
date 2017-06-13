@@ -25,41 +25,40 @@
 
 namespace Granule\Util;
 
-class MutableArrayTree extends ArrayTree {
-    public function offsetSet($offset, $value): void {
-        if (is_null($offset)) {
-            $this->data[] = $value;
-        } else {
-            $offset = $this->extractKey($offset);
-            $data = &$this->data;
+final class TypeHelper {
+    private function __construct() {
+    }
 
-            foreach ($offset as $key) {
-                if (!array_key_exists($key, $data)) {
-                    $data[$key] = [];
-                }
+    private function __clone() {
+    }
 
-                $data = &$data[$key];
-            }
+    public static function getType($cause): string {
+        return is_object($cause) ? get_class($cause) : gettype($cause);
+    }
 
-            $data = $value;
+    public static function validate($cause, string $expectedType): void {
+        if (!self::hasType($cause, $expectedType)) {
+            throw new \TypeError(sprintf('Expected type %s provided: %s',
+                $expectedType, self::getType($cause)
+            ));
         }
     }
 
-    public function offsetUnset($offset): void {
-        $offset = $this->extractKey($offset);
-        $this->recursiveSearch($this->data, array_shift($offset), [], $offset,
-            function (&$value, array $p, &$data, string $key) {
-                unset($data[$key]);
-            }, function (array $path) {
-                throw new \OutOfBoundsException(sprintf('Element "%s" not found', implode('.', $path)));
-            });
+    public static function hasType($cause, string $type): bool {
+        $actualType = self::getType($cause);
+
+        return $actualType === $type;
     }
 
-    public function toMutable(): MutableArrayTree {
-        return $this;
+    public static function validateKey($key, $object): void {
+        if ($object instanceof StrictTypedKey) {
+            self::validate($key, $object->getKeyType());
+        }
     }
 
-    public function toImmutable(): ArrayTree {
-        return ArrayTree::fromArray($this->data);
+    public static function validateValue($value, $object): void {
+        if ($object instanceof StrictTypedValue) {
+            self::validate($value, $object->getValueType());
+        }
     }
 }

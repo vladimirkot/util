@@ -23,12 +23,9 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util\TO;
+namespace Granule\Util\Map;
 
-use Granule\Util\{ArrayCollection, StrictTypedValue};
+use Granule\Util\MutableMap;
 
-class DateCollection extends ArrayCollection implements StrictTypedValue {
-    public function getValueType(): string {
-        return \DateTimeImmutable::class;
-    }
+class MutableObjectMap extends ObjectMap implements MutableMap {
 }

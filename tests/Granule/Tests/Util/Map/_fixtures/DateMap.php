@@ -23,14 +23,13 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Tests\Util\Map\_fixtures;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+use Granule\Util\Map\ArrayMap;
+use Granule\Util\StrictTypedValue;
+
+class DateMap extends ArrayMap implements StrictTypedValue {
+    public function getValueType(): string {
+        return \DateTimeImmutable::class;
+    }
 }

@@ -23,16 +23,17 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util;
+namespace Granule\Tests\Util\Collection;
 
-use Granule\Tests\Util\TO\MutableDateCollection;
-use Granule\Util\ArrayCollection;
+use Granule\Tests\Util\Collection\_fixtures\MutableDateCollection;
+use Granule\Util\Collection\ArrayCollection;
 use Granule\Util\MutableCollection;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @qroup unit
- * @coversDefaultClass Granule\Util\MutableArrayCollection
+ * @group collection
+ * @coversDefaultClass Granule\Util\Collection\MutableArrayCollection
  */
 class MutableArrayCollectionTest extends TestCase {
     public function provider(): array {

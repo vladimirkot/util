@@ -23,30 +23,47 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Map;
 
-class StrictTypedCollectionBuilder extends CollectionBuilder implements StrictTypedValue {
+use Granule\Util\{Map, TypeHelper};
+
+class MapBuilder {
+    /** @var array */
+    protected $elements = [];
     /** @var string */
-    protected $valueType;
+    protected $mapClass;
+    /** @var ?string */
+    protected $mappingType;
+    /** @var ?string */
+    protected $keyType;
 
-    public function __construct(string $collectionClass, string $valueType) {
-        parent::__construct($collectionClass);
-        $this->valueType = $valueType;
+    public function __construct(string $mapClass, ?string $mappingType, ?string $keyType) {
+        $this->mapClass = $mapClass;
+        $this->mappingType = $mappingType;
+        $this->keyType = $keyType;
     }
 
-    public function add($element): CollectionBuilder {
-        $type = is_object($element) ? get_class($element) : gettype($element);
-        if (!($this->valueType == $type)) {
-            throw new \TypeError(
-                sprintf('Expected type %s provided: ', $this->valueType, $type)
-            );
+    public function add($key, $value): MapBuilder {
+        if ($this->keyType) {
+            TypeHelper::validate($key, $this->keyType);
         }
 
-        return parent::add($element);
+        if ($this->mappingType) {
+            TypeHelper::validate($value, $this->mappingType);
+        }
+
+        $this->elements[$key] = $value;
+
+        return $this;
     }
 
+    public function getElements(): array {
+        return $this->elements;
+    }
 
-    public function getValueType(): string {
-        return $this->valueType;
+    public function build(): Map {
+        $class = $this->mapClass;
+
+        return new $class($this);
     }
 }

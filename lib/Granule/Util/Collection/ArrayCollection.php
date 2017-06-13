@@ -23,7 +23,10 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Collection;
+
+use Granule\Util\Collection;
+use Granule\Util\StrictTypedValue;
 
 class ArrayCollection implements Collection {
     protected $elements = [];
@@ -154,12 +157,12 @@ class ArrayCollection implements Collection {
     }
 
     /** {@inheritdoc} */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value): void {
         throw new \BadMethodCallException('Unable to change immutable collection');
     }
 
     /** {@inheritdoc} */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset): void {
         throw new \BadMethodCallException('Unable to change immutable collection');
     }
 

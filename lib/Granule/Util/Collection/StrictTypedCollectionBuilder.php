@@ -23,14 +23,32 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Collection;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+use Granule\Util\StrictTypedValue;
+
+class StrictTypedCollectionBuilder extends CollectionBuilder implements StrictTypedValue {
+    /** @var string */
+    protected $valueType;
+
+    public function __construct(string $collectionClass, string $valueType) {
+        parent::__construct($collectionClass);
+        $this->valueType = $valueType;
+    }
+
+    public function add($element): CollectionBuilder {
+        $type = is_object($element) ? get_class($element) : gettype($element);
+        if (!($this->valueType == $type)) {
+            throw new \TypeError(
+                sprintf('Expected type %s provided: ', $this->valueType, $type)
+            );
+        }
+
+        return parent::add($element);
+    }
+
+
+    public function getValueType(): string {
+        return $this->valueType;
+    }
 }

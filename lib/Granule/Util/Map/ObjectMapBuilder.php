@@ -23,14 +23,39 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Map;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+use Granule\Util\Map;
+use Granule\Util\TypeHelper;
+
+class ObjectMapBuilder extends MapBuilder {
+    /** @var \SplObjectStorage */
+    protected $elements;
+
+    public function __construct($mapClass, $mappingType, $keyType) {
+        parent::__construct($mapClass, $mappingType, $keyType);
+        $this->elements = new \SplObjectStorage;
+    }
+
+    public function add($key, $value): MapBuilder {
+        if ($this->keyType) {
+            TypeHelper::validate($key, $this->keyType);
+        }
+
+        if ($this->mappingType) {
+            TypeHelper::validate($key, $this->mappingType);
+        }
+
+        $this->elements->attach($key, $value);
+
+        return $this;
+    }
+
+    public function getElements(): array {
+        throw new \BadMethodCallException('Not supported method');
+    }
+
+    public function build(): Map {
+        return call_user_func([$this->mapClass, 'fromStorage'], $this->elements);
+    }
 }

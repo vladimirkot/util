@@ -23,15 +23,17 @@
  * SOFTWARE.
  */
 
-namespace Granule\Tests\Util;
+namespace Granule\Tests\Util\Tree;
 
-use Granule\Util\ArrayTree;
-use Granule\Util\MutableArrayTree;
+use Granule\Util\Tree\ArrayTree;
+use Granule\Util\Tree\MutableArrayTree;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Granule\Util\ArrayTree
- * @coversDefaultClass Granule\Util\MutableArrayTree
+ * @group unit
+ * @group tree
+ * @coversDefaultClass Granule\Util\Tree\ArrayTree
+ * @coversDefaultClass Granule\Util\Tree\MutableArrayTree
  */
 class ArrayTreeTest extends TestCase {
     public function provider(): array {

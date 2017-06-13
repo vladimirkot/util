@@ -23,14 +23,28 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Tests\Util\_fixtures;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+use Granule\Util\Enum;
+
+/**
+ * @method static Month January()
+ * @method static Month February()
+ */
+class Month extends Enum {
+    private const
+        January = 1,
+        February = 2
+    ;
+
+    /** @var int */
+    private $position;
+
+    public function __init(int $position) {
+        $this->position = $position;
+    }
+
+    public function getPosition(): int {
+        return $this->position;
+    }
 }

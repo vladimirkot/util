@@ -25,11 +25,7 @@
 
 namespace Granule\Util;
 
-/**
- * Interface Map
- * @see http://docs.oracle.com/javase/8/docs/api/java/util/Map.html
- */
-interface Map extends \IteratorAggregate, Hashable {
+interface Map extends \Iterator, \Countable, \ArrayAccess, Hashable {
     /** Returns true if this map contains a mapping for the specified key. */
     function containsKey($key): bool;
     /** Returns true if this map maps one or more keys to the specified value. */
@@ -49,9 +45,34 @@ interface Map extends \IteratorAggregate, Hashable {
     /** Returns an array of the keys contained in this map. */
     function keys(): array;
     /** Returns the number of key-value mappings in this map. */
-    function size(): int;
+    function count(): int;
     /** Returns a Collection view of the values contained in this map. */
-    function values(string $collectionClass): Collection;
+    function values(string $collectionClass = null): Collection;
     /** Returns array representation of map */
     function toArray(): array;
+    /**
+     * Return the current element
+     * @link http://php.net/manual/en/iterator.current.php
+     */
+    function current();
+    /**
+     * Move forward to next element
+     * @link http://php.net/manual/en/iterator.next.php
+     */
+    function next(): void;
+    /**
+     * Return the key of the current element
+     * @link http://php.net/manual/en/iterator.key.php
+     */
+    function key();
+    /**
+     * Checks if current position is valid
+     * @link http://php.net/manual/en/iterator.valid.php
+     */
+    function valid(): bool;
+    /**
+     * Rewind the Iterator to the first element
+     * @link http://php.net/manual/en/iterator.rewind.php
+     */
+    function rewind(): void;
 }

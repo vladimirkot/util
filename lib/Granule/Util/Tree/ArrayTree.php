@@ -23,7 +23,9 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Util\Tree;
+
+use Granule\Util\Tree;
 
 class ArrayTree implements Tree {
     /** @var array */

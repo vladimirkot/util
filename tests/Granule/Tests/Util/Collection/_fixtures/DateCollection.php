@@ -23,14 +23,13 @@
  * SOFTWARE.
  */
 
-namespace Granule\Util;
+namespace Granule\Tests\Util\Collection\_fixtures;
 
-interface Tree extends
-    \ArrayAccess,
-    \Iterator,
-    \Countable,
-    \Serializable,
-    \JsonSerializable,
-    Hashable {
-    function __invoke(string $offset, $default = null);
+use Granule\Util\Collection\ArrayCollection;
+use Granule\Util\StrictTypedValue;
+
+class DateCollection extends ArrayCollection implements StrictTypedValue {
+    public function getValueType(): string {
+        return \DateTimeImmutable::class;
+    }
 }
