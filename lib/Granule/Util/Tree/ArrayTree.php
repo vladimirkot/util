@@ -32,6 +32,8 @@ class ArrayTree implements Tree {
     protected $data;
     /** @var array */
     protected $srcPath = [];
+    /** @var ?string */
+    protected $iterableSuffix;
 
     protected function __construct(array &$data, array $srcPath = []) {
         $this->data = &$data;
@@ -52,6 +54,7 @@ class ArrayTree implements Tree {
 
     public function next(): void {
         next($this->data);
+        $this->iterableSuffix = $this->key();
     }
 
     public function valid(): bool {
@@ -61,13 +64,22 @@ class ArrayTree implements Tree {
     public function current() {
         $element = &$this->data[key($this->data)];
 
-        return is_array($element)
-            ? static::fromArrayByReference($element, $this->srcPath)
-            : $element;
+        if (!is_array($element)) {
+            return $element;
+        }
+
+        $path = $this->srcPath;
+
+        if ($this->iterableSuffix !== null) {
+             array_push($path, $this->iterableSuffix);
+        }
+
+        return static::fromArrayByReference($element, $path);
     }
 
     public function rewind(): void {
         reset($this->data);
+        $this->iterableSuffix = null;
     }
 
     public function count(): int {
@@ -94,36 +106,6 @@ class ArrayTree implements Tree {
         throw new \BadMethodCallException('Immutable structure: You are not allowed to remove data');
     }
 
-    public function offsetExists($offset): bool {
-        $offset = $this->extractKey($offset);
-
-        return $this->recursiveSearch($this->data, array_shift($offset), [], $offset, function () {
-            return true;
-        }, function () {
-            return false;
-        });
-    }
-
-    public function offsetGet($offset) {
-        $offset = $this->extractKey($offset);
-
-        return $this->recursiveSearch($this->data, array_shift($offset), [], $offset, function (&$value, array $path) {
-            return is_array($value) ? static::fromArrayByReference($value, $path) : $value;
-        }, function (array $path) {
-            throw new \OutOfBoundsException(sprintf('Element "%s" not found', implode('.', $path)));
-        });
-    }
-
-    public function __invoke(string $offset, $default = null) {
-        $offset = $this->extractKey($offset);
-
-        return $this->recursiveSearch($this->data, array_shift($offset), [], $offset, function (&$value, array $path) {
-            return is_array($value) ? static::fromArrayByReference($value, $path) : $value;
-        }, function () use ($default) {
-            return $default;
-        });
-    }
-
     public function toMutable(): MutableArrayTree {
         return MutableArrayTree::fromArrayByReference($this->data, $this->srcPath);
     }
@@ -140,7 +122,37 @@ class ArrayTree implements Tree {
         return md5(serialize($this->data));
     }
 
-    protected function recursiveSearch(
+    public function offsetExists($offset): bool {
+        $offset = $this->extractKey($offset);
+
+        return $this->find($this->data, array_shift($offset), [], $offset, function () {
+            return true;
+        }, function () {
+            return false;
+        });
+    }
+
+    public function offsetGet($offset) {
+        $offset = $this->extractKey($offset);
+
+        return $this->find($this->data, array_shift($offset), $this->srcPath, $offset, function (&$value, array $path) {
+            return is_array($value) ? static::fromArrayByReference($value, $path) : $value;
+        }, function (array $path) {
+            throw new \OutOfBoundsException(sprintf('Element "%s" not found', implode('.', $path)));
+        });
+    }
+
+    public function __invoke(string $offset, $default = null) {
+        $offset = $this->extractKey($offset);
+
+        return $this->find($this->data, array_shift($offset), $this->srcPath, $offset, function (&$value, array $path) {
+            return is_array($value) ? static::fromArrayByReference($value, $path) : $value;
+        }, function () use ($default) {
+            return $default;
+        });
+    }
+
+    protected function find(
         array &$data, string $key, array $path, array $next,
         \Closure $onFound = null, \Closure $onNotFound = null
     ) {
@@ -150,14 +162,14 @@ class ArrayTree implements Tree {
                 if (!$next) {
                     return $onFound($data[$key], $path, $data, $key); // the value
                 } else {
-                    return $this->recursiveSearch($data[$key], array_shift($next), $path, $next, $onFound, $onNotFound); // next step
+                    return $this->find($data[$key], array_shift($next), $path, $next, $onFound, $onNotFound); // next step
                 }
             }
 
             return $onFound($data[$key], $path, $data, $key); // also the value
         }
 
-        return $onNotFound(array_merge($this->srcPath, $path));
+        return $onNotFound($path);
     }
 
     protected function extractKey(string $key): array {

@@ -47,7 +47,7 @@ class MutableArrayTree extends ArrayTree {
 
     public function offsetUnset($offset): void {
         $offset = $this->extractKey($offset);
-        $this->recursiveSearch($this->data, array_shift($offset), [], $offset,
+        $this->find($this->data, array_shift($offset), [], $offset,
             function (&$value, array $p, &$data, string $key) {
                 unset($data[$key]);
             }, function (array $path) {
