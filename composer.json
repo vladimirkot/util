@@ -1,6 +1,6 @@
 {
     "name": "granule/util",
-    "description": "Granule Utils",
+    "description": "Granule Utilities",
     "keywords": ["enum", "tree", "array", "data", "collection", "map"],
     "type": "library",
     "require": {
@@ -18,9 +18,9 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-4": { "Granule\\Util\\": "lib/Granule/Util" }
+        "psr-4": { "Granule\\Util\\": "lib" }
     },
     "autoload-dev": {
-        "psr-4": { "Granule\\Tests\\Util\\": "tests/Granule/Tests/Util" }
+        "psr-4": { "Granule\\Tests\\Util\\": "tests" }
     }
 }
