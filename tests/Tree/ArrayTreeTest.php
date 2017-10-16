@@ -192,4 +192,15 @@ class ArrayTreeTest extends TestCase {
             $value[2];
         }
     }
+
+    /**
+     * @test
+     * @expectedException \OutOfBoundsException
+     * @expectedExceptionMessage Element "var 1.0.5" not found
+     */
+    public function it_should_throw_exception_when_0_key_not_found(): void {
+        foreach (self::$immutableTree['var 1'] as $index => $value) {
+            $value[5];
+        }
+    }
 }

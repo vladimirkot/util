@@ -32,8 +32,6 @@ class ArrayTree implements Tree {
     protected $data;
     /** @var array */
     protected $srcPath = [];
-    /** @var ?string */
-    protected $iterableSuffix;
 
     protected function __construct(array &$data, array $srcPath = []) {
         $this->data = &$data;
@@ -54,7 +52,6 @@ class ArrayTree implements Tree {
 
     public function next(): void {
         next($this->data);
-        $this->iterableSuffix = $this->key();
     }
 
     public function valid(): bool {
@@ -62,24 +59,20 @@ class ArrayTree implements Tree {
     }
 
     public function current() {
-        $element = &$this->data[key($this->data)];
+        $element = &$this->data[$this->key()];
 
         if (!is_array($element)) {
             return $element;
         }
 
         $path = $this->srcPath;
-
-        if ($this->iterableSuffix !== null) {
-             array_push($path, $this->iterableSuffix);
-        }
+        array_push($path, $this->key());
 
         return static::fromArrayByReference($element, $path);
     }
 
     public function rewind(): void {
         reset($this->data);
-        $this->iterableSuffix = null;
     }
 
     public function count(): int {
