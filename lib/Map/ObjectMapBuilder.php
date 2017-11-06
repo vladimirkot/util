@@ -43,7 +43,7 @@ class ObjectMapBuilder extends MapBuilder {
         }
 
         if ($this->mappingType) {
-            TypeHelper::validate($key, $this->mappingType);
+            TypeHelper::validate($value, $this->mappingType);
         }
 
         $this->elements->attach($key, $value);
