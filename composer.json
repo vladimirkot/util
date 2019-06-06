@@ -1,6 +1,6 @@
 {
-    "name": "granule/util",
-    "description": "Granule Utilities",
+    "name": "vladimirkot/granule-util",
+    "description": "Granule Utilities fork",
     "keywords": ["enum", "tree", "array", "data", "collection", "map"],
     "type": "library",
     "require": {
